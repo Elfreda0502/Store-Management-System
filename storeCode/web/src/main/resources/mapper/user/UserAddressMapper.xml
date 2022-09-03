@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.game.user.mapper.UserAddressMapper">
+
+    <resultMap type="UserAddress" id="UserAddressResult">
+        <result property="id"    column="id"    />
+        <result property="address"    column="address"    />
+        <result property="consignee"    column="consignee"    />
+        <result property="receivingNumber"    column="receiving_number"    />
+        <result property="userId"    column="user_id"    />
+        <result property="isDefault"    column="is_default"    />
+    </resultMap>
+
+    <sql id="selectUserAddressVo">
+        select id, address, consignee, receiving_number, user_id, is_default from user_address
+    </sql>
+
+    <select id="selectUserAddressList" parameterType="UserAddress" resultMap="UserAddressResult">
+        <include refid="selectUserAddressVo"/>
+        <where>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="consignee != null  and consignee != ''"> and consignee = #{consignee}</if>
+            <if test="receivingNumber != null  and receivingNumber != ''"> and receiving_number = #{receivingNumber}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="isDefault != null "> and is_default = #{isDefault}</if>
+        </where>
+    </select>
+
+    <select id="selectUserAddressById" parameterType="Long" resultMap="UserAddressResult">
+        <include refid="selectUserAddressVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertUserAddress" parameterType="UserAddress" useGeneratedKeys="true" keyProperty="id">
+        insert into user_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="address != null and address != ''">address,</if>
+            <if test="consignee != null and consignee != ''">consignee,</if>
+            <if test="receivingNumber != null and receivingNumber != ''">receiving_number,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isDefault != null">is_default,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="consignee != null and consignee != ''">#{consignee},</if>
+            <if test="receivingNumber != null and receivingNumber != ''">#{receivingNumber},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isDefault != null">#{isDefault},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserAddress" parameterType="UserAddress">
+        update user_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="consignee != null and consignee != ''">consignee = #{consignee},</if>
+            <if test="receivingNumber != null and receivingNumber != ''">receiving_number = #{receivingNumber},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isDefault != null">is_default = #{isDefault},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserAddressById" parameterType="Long">
+        delete from user_address where id = #{id}
+    </delete>
+
+    <delete id="deleteUserAddressByIds" parameterType="String">
+        delete from user_address where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

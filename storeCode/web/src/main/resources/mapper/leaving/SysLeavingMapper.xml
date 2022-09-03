@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.game.leaving.mapper.SysLeavingMapper">
+    
+    <resultMap type="SysLeaving" id="SysLeavingResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="leavingMessage"    column="leaving_message"    />
+        <result property="replyMessage"    column="reply_message"    />
+        <result property="leavingTime"    column="leaving_time"    />
+        <result property="replyTime"    column="reply_time"    />
+    </resultMap>
+
+    <sql id="selectSysLeavingVo">
+        select id, uid, leaving_message, reply_message, leaving_time, reply_time from sys_leaving
+    </sql>
+
+    <select id="selectSysLeavingList" parameterType="SysLeaving" resultMap="SysLeavingResult">
+        <include refid="selectSysLeavingVo"/>
+        <where>  
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="leavingMessage != null  and leavingMessage != ''"> and leaving_message = #{leavingMessage}</if>
+            <if test="replyMessage != null  and replyMessage != ''"> and reply_message = #{replyMessage}</if>
+            <if test="leavingTime != null "> and leaving_time = #{leavingTime}</if>
+            <if test="replyTime != null "> and reply_time = #{replyTime}</if>
+        </where>
+        ORDER BY leaving_time DESC
+    </select>
+    
+    <select id="selectSysLeavingById" parameterType="Long" resultMap="SysLeavingResult">
+        <include refid="selectSysLeavingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysLeaving" parameterType="SysLeaving">
+        insert into sys_leaving
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uid != null">uid,</if>
+            <if test="leavingMessage != null">leaving_message,</if>
+            <if test="replyMessage != null">reply_message,</if>
+            <if test="leavingTime != null">leaving_time,</if>
+            <if test="replyTime != null">reply_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="leavingMessage != null">#{leavingMessage},</if>
+            <if test="replyMessage != null">#{replyMessage},</if>
+            <if test="leavingTime != null">#{leavingTime},</if>
+            <if test="replyTime != null">#{replyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysLeaving" parameterType="SysLeaving">
+        update sys_leaving
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="leavingMessage != null">leaving_message = #{leavingMessage},</if>
+            <if test="replyMessage != null">reply_message = #{replyMessage},</if>
+            <if test="leavingTime != null">leaving_time = #{leavingTime},</if>
+            <if test="replyTime != null">reply_time = #{replyTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysLeavingById" parameterType="Long">
+        delete from sys_leaving where id = #{id}
+    </delete>
+
+    <delete id="deleteSysLeavingByIds" parameterType="String">
+        delete from sys_leaving where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.game.store.category.mapper.StoreCategoryMapper">
+    
+    <resultMap type="StoreCategory" id="StoreCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="pid"    column="pid"    />
+        <result property="cateName"    column="cate_name"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+    <sql id="selectStoreCategoryVo">
+        select id, pid, cate_name, sort from store_category
+    </sql>
+
+    <select id="selectStoreCategoryList" parameterType="StoreCategory" resultMap="StoreCategoryResult">
+        <include refid="selectStoreCategoryVo"/>
+        <where>  
+            <if test="pid != null "> and pid = #{pid}</if>
+            <if test="cateName != null  and cateName != ''"> and cate_name like concat('%', #{cateName}, '%')</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+
+        </where>
+    </select>
+    
+    <select id="selectStoreCategoryById" parameterType="Long" resultMap="StoreCategoryResult">
+        <include refid="selectStoreCategoryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStoreCategory" parameterType="StoreCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into store_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pid != null">pid,</if>
+            <if test="cateName != null and cateName != ''">cate_name,</if>
+            <if test="sort != null">sort,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pid != null">#{pid},</if>
+            <if test="cateName != null and cateName != ''">#{cateName},</if>
+            <if test="sort != null">#{sort},</if>
+
+         </trim>
+    </insert>
+
+    <update id="updateStoreCategory" parameterType="StoreCategory">
+        update store_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="cateName != null and cateName != ''">cate_name = #{cateName},</if>
+            <if test="sort != null">sort = #{sort},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStoreCategoryById" parameterType="Long">
+        delete from store_category where id = #{id}
+    </delete>
+
+    <delete id="deleteStoreCategoryByIds" parameterType="String">
+        delete from store_category where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

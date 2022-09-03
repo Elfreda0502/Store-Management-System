@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.game.store.order.mapper.StoreOrderMapper">
+
+    <resultMap type="StoreOrder" id="StoreOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="extendOrderId"    column="extend_order_id"    />
+        <result property="uid"    column="uid"    />
+        <result property="realName"    column="real_name"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="userAddress"    column="user_address"    />
+        <result property="cartId"    column="cart_id"    />
+        <result property="freightPrice"    column="freight_price"    />
+        <result property="totalNum"    column="total_num"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="totalPostage"    column="total_postage"    />
+        <result property="payPrice"    column="pay_price"    />
+        <result property="payPostage"    column="pay_postage"    />
+        <result property="deductionPrice"    column="deduction_price"    />
+        <result property="couponId"    column="coupon_id"    />
+        <result property="couponPrice"    column="coupon_price"    />
+        <result property="paid"    column="paid"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="payType"    column="pay_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="refundStatus"    column="refund_status"    />
+        <result property="refundReasonWapImg"    column="refund_reason_wap_img"    />
+        <result property="refundReasonWapExplain"    column="refund_reason_wap_explain"    />
+        <result property="refundReasonTime"    column="refund_reason_time"    />
+        <result property="refundReasonWap"    column="refund_reason_wap"    />
+        <result property="refundReason"    column="refund_reason"    />
+        <result property="refundPrice"    column="refund_price"    />
+        <result property="deliverySn"    column="delivery_sn"    />
+        <result property="deliveryName"    column="delivery_name"    />
+        <result property="deliveryType"    column="delivery_type"    />
+        <result property="deliveryId"    column="delivery_id"    />
+        <result property="cost"    column="cost"    />
+        <result property="verifyCode"    column="verify_code"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="shippingType"    column="shipping_type"    />
+        <result property="productId"    column="product_id"    />
+        <result property="storeName"    column="store_name"    />
+    </resultMap>
+
+    <sql id="selectStoreOrderVo">
+        select A.id, order_id, extend_order_id, uid, real_name, user_phone, user_address, cart_id, freight_price, total_num, total_price, total_postage, pay_price, pay_postage, deduction_price, coupon_id, coupon_price, paid, pay_time, pay_type, create_time, update_time, status, refund_status, refund_reason_wap_img, refund_reason_wap_explain, refund_reason_time, refund_reason_wap, refund_reason, refund_price, delivery_sn, delivery_name, delivery_type, delivery_id, A.cost, verify_code, store_id, shipping_type,product_id,B.store_name from store_order as A left join store_product as B on A.product_id = B.id
+    </sql>
+
+    <select id="selectStoreOrderList" parameterType="StoreOrder" resultMap="StoreOrderResult">
+        <include refid="selectStoreOrderVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="extendOrderId != null  and extendOrderId != ''"> and extend_order_id = #{extendOrderId}</if>
+            <if test="uid != null  and uid != ''"> and uid = #{uid}</if>
+            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
+            <if test="userPhone != null  and userPhone != ''"> and user_phone = #{userPhone}</if>
+            <if test="userAddress != null  and userAddress != ''"> and user_address = #{userAddress}</if>
+            <if test="cartId != null  and cartId != ''"> and cart_id = #{cartId}</if>
+            <if test="freightPrice != null "> and freight_price = #{freightPrice}</if>
+            <if test="totalNum != null  and totalNum != ''"> and total_num = #{totalNum}</if>
+            <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+            <if test="totalPostage != null "> and total_postage = #{totalPostage}</if>
+            <if test="payPrice != null "> and pay_price = #{payPrice}</if>
+            <if test="payPostage != null "> and pay_postage = #{payPostage}</if>
+            <if test="deductionPrice != null "> and deduction_price = #{deductionPrice}</if>
+            <if test="couponId != null  and couponId != ''"> and coupon_id = #{couponId}</if>
+            <if test="couponPrice != null "> and coupon_price = #{couponPrice}</if>
+            <if test="paid != null  and paid != ''"> and paid = #{paid}</if>
+            <if test="payTime != null "> and pay_time = #{payTime}</if>
+            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="refundStatus != null  and refundStatus != ''"> and refund_status = #{refundStatus}</if>
+            <if test="refundReasonWapImg != null  and refundReasonWapImg != ''"> and refund_reason_wap_img = #{refundReasonWapImg}</if>
+            <if test="refundReasonWapExplain != null  and refundReasonWapExplain != ''"> and refund_reason_wap_explain = #{refundReasonWapExplain}</if>
+            <if test="refundReasonTime != null "> and refund_reason_time = #{refundReasonTime}</if>
+            <if test="refundReasonWap != null  and refundReasonWap != ''"> and refund_reason_wap = #{refundReasonWap}</if>
+            <if test="refundReason != null  and refundReason != ''"> and refund_reason = #{refundReason}</if>
+            <if test="refundPrice != null "> and refund_price = #{refundPrice}</if>
+            <if test="deliverySn != null  and deliverySn != ''"> and delivery_sn = #{deliverySn}</if>
+            <if test="deliveryName != null  and deliveryName != ''"> and delivery_name like concat('%', #{deliveryName}, '%')</if>
+            <if test="deliveryType != null  and deliveryType != ''"> and delivery_type = #{deliveryType}</if>
+            <if test="deliveryId != null  and deliveryId != ''"> and delivery_id = #{deliveryId}</if>
+            <if test="cost != null "> and cost = #{cost}</if>
+            <if test="verifyCode != null  and verifyCode != ''"> and verify_code = #{verifyCode}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="shippingType != null "> and shipping_type = #{shippingType}</if>
+        </where>
+    </select>
+
+    <select id="selectStoreOrderById" parameterType="String" resultMap="StoreOrderResult">
+        <include refid="selectStoreOrderVo"/>
+        where A.id = #{id}
+    </select>
+
+    <insert id="insertStoreOrder" parameterType="StoreOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into store_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">order_id,</if>
+            <if test="extendOrderId != null">extend_order_id,</if>
+            <if test="uid != null and uid != ''">uid,</if>
+            <if test="realName != null and realName != ''">real_name,</if>
+            <if test="userPhone != null and userPhone != ''">user_phone,</if>
+            <if test="userAddress != null and userAddress != ''">user_address,</if>
+            <if test="cartId != null and cartId != ''">cart_id,</if>
+            <if test="freightPrice != null">freight_price,</if>
+            <if test="totalNum != null and totalNum != ''">total_num,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="totalPostage != null">total_postage,</if>
+            <if test="payPrice != null">pay_price,</if>
+            <if test="payPostage != null">pay_postage,</if>
+            <if test="deductionPrice != null">deduction_price,</if>
+            <if test="couponId != null and couponId != ''">coupon_id,</if>
+            <if test="couponPrice != null">coupon_price,</if>
+            <if test="paid != null and paid != ''">paid,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="payType != null and payType != ''">pay_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="refundStatus != null and refundStatus != ''">refund_status,</if>
+            <if test="refundReasonWapImg != null">refund_reason_wap_img,</if>
+            <if test="refundReasonWapExplain != null">refund_reason_wap_explain,</if>
+            <if test="refundReasonTime != null">refund_reason_time,</if>
+            <if test="refundReasonWap != null">refund_reason_wap,</if>
+            <if test="refundReason != null">refund_reason,</if>
+            <if test="refundPrice != null">refund_price,</if>
+            <if test="deliverySn != null">delivery_sn,</if>
+            <if test="deliveryName != null">delivery_name,</if>
+            <if test="deliveryType != null">delivery_type,</if>
+            <if test="deliveryId != null">delivery_id,</if>
+            <if test="cost != null">cost,</if>
+            <if test="verifyCode != null and verifyCode != ''">verify_code,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="shippingType != null">shipping_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">#{orderId},</if>
+            <if test="extendOrderId != null">#{extendOrderId},</if>
+            <if test="uid != null and uid != ''">#{uid},</if>
+            <if test="realName != null and realName != ''">#{realName},</if>
+            <if test="userPhone != null and userPhone != ''">#{userPhone},</if>
+            <if test="userAddress != null and userAddress != ''">#{userAddress},</if>
+            <if test="cartId != null and cartId != ''">#{cartId},</if>
+            <if test="freightPrice != null">#{freightPrice},</if>
+            <if test="totalNum != null and totalNum != ''">#{totalNum},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="totalPostage != null">#{totalPostage},</if>
+            <if test="payPrice != null">#{payPrice},</if>
+            <if test="payPostage != null">#{payPostage},</if>
+            <if test="deductionPrice != null">#{deductionPrice},</if>
+            <if test="couponId != null and couponId != ''">#{couponId},</if>
+            <if test="couponPrice != null">#{couponPrice},</if>
+            <if test="paid != null and paid != ''">#{paid},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="payType != null and payType != ''">#{payType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="refundStatus != null and refundStatus != ''">#{refundStatus},</if>
+            <if test="refundReasonWapImg != null">#{refundReasonWapImg},</if>
+            <if test="refundReasonWapExplain != null">#{refundReasonWapExplain},</if>
+            <if test="refundReasonTime != null">#{refundReasonTime},</if>
+            <if test="refundReasonWap != null">#{refundReasonWap},</if>
+            <if test="refundReason != null">#{refundReason},</if>
+            <if test="refundPrice != null">#{refundPrice},</if>
+            <if test="deliverySn != null">#{deliverySn},</if>
+            <if test="deliveryName != null">#{deliveryName},</if>
+            <if test="deliveryType != null">#{deliveryType},</if>
+            <if test="deliveryId != null">#{deliveryId},</if>
+            <if test="cost != null">#{cost},</if>
+            <if test="verifyCode != null and verifyCode != ''">#{verifyCode},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="shippingType != null">#{shippingType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStoreOrder" parameterType="StoreOrder">
+        update store_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">order_id = #{orderId},</if>
+            <if test="extendOrderId != null">extend_order_id = #{extendOrderId},</if>
+            <if test="uid != null and uid != ''">uid = #{uid},</if>
+            <if test="realName != null and realName != ''">real_name = #{realName},</if>
+            <if test="userPhone != null and userPhone != ''">user_phone = #{userPhone},</if>
+            <if test="userAddress != null and userAddress != ''">user_address = #{userAddress},</if>
+            <if test="cartId != null and cartId != ''">cart_id = #{cartId},</if>
+            <if test="freightPrice != null">freight_price = #{freightPrice},</if>
+            <if test="totalNum != null and totalNum != ''">total_num = #{totalNum},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="totalPostage != null">total_postage = #{totalPostage},</if>
+            <if test="payPrice != null">pay_price = #{payPrice},</if>
+            <if test="payPostage != null">pay_postage = #{payPostage},</if>
+            <if test="deductionPrice != null">deduction_price = #{deductionPrice},</if>
+            <if test="couponId != null and couponId != ''">coupon_id = #{couponId},</if>
+            <if test="couponPrice != null">coupon_price = #{couponPrice},</if>
+            <if test="paid != null and paid != ''">paid = #{paid},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="payType != null and payType != ''">pay_type = #{payType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="refundStatus != null and refundStatus != ''">refund_status = #{refundStatus},</if>
+            <if test="refundReasonWapImg != null">refund_reason_wap_img = #{refundReasonWapImg},</if>
+            <if test="refundReasonWapExplain != null">refund_reason_wap_explain = #{refundReasonWapExplain},</if>
+            <if test="refundReasonTime != null">refund_reason_time = #{refundReasonTime},</if>
+            <if test="refundReasonWap != null">refund_reason_wap = #{refundReasonWap},</if>
+            <if test="refundReason != null">refund_reason = #{refundReason},</if>
+            <if test="refundPrice != null">refund_price = #{refundPrice},</if>
+            <if test="deliverySn != null">delivery_sn = #{deliverySn},</if>
+            <if test="deliveryName != null">delivery_name = #{deliveryName},</if>
+            <if test="deliveryType != null">delivery_type = #{deliveryType},</if>
+            <if test="deliveryId != null">delivery_id = #{deliveryId},</if>
+            <if test="cost != null">cost = #{cost},</if>
+            <if test="verifyCode != null and verifyCode != ''">verify_code = #{verifyCode},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="shippingType != null">shipping_type = #{shippingType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStoreOrderById" parameterType="String">
+        delete from store_order where id = #{id}
+    </delete>
+
+    <delete id="deleteStoreOrderByIds" parameterType="String">
+        delete from store_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

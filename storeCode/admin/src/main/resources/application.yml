@@ -1,0 +1,142 @@
+# Project related configuration
+store:
+  # name
+  name: Store
+  # Version
+  version: 3.8.2
+  # Copyright year
+  copyrightYear: 2022
+  # Example demo switch
+  demoEnabled: true
+  # File path example (Windows configuration D:/store/uploadPath, Linux configuration /home/store/uploadPath)
+  profile: D:/store/uploadPath
+  # Get ip address switch
+  addressEnabled: false
+  # verification code type math array calculation char character verification
+  captchaType: math
+# Development environment configuration
+server:
+  # The HTTP port of the server, the default is 8080
+  port: 9090
+  servlet:
+    # The access path of the application
+    context-path: /
+  tomcat:
+    # URI encoding of tomcat
+    uri-encoding: UTF-8
+    # The number of queues after the number of connections is full, the default is 100
+    accept-count: 1000
+    threads:
+      # tomcat maximum number of threads, default is 200
+      max: 800
+      # The number of threads that Tomcat starts and initializes, the default value is 10
+      min-spare: 100
+# log configuration
+logging:
+  level:
+    com.ruoyi: debug
+    org.springframework: warn
+
+# Spring configuration
+spring:
+  mail:
+    host: smtp.163.com
+    port: 25
+    default-encoding: utf-8
+    username: smartstore2022@163.com
+    password: UYEZQHXAXRITKWLY
+  # resource information
+  messages:
+    # Internationalized resource file path
+    basename: i18n/messages
+  profiles:
+    active: druid
+  # File Upload
+  servlet:
+    multipart:
+      # single file size
+      max-file-size: 10MB
+      # Set the total uploaded file size
+      max-request-size: 20MB
+  # service module
+  devtools:
+    restart:
+      # hot deploy switch
+      enabled: true
+      # redis configuration
+      redis:
+        # address
+        host: localhost
+        # port, default is 6379
+        port: 6379
+        #Database index
+        database: 0
+        # password
+        password:
+        # connection timeout
+        timeout: 10s
+        lettuce:
+          pool:
+            # Minimum idle connection in the connection pool
+            min-idle: 0
+            # Maximum idle connections in the connection pool
+            max-idle: 8
+            # The maximum number of Data database connections in the connection pool
+            max-active: 8
+            # #Connection pool maximum blocking wait time (use a negative value to indicate no limit)
+            max-wait: -1ms
+
+# token configuration
+token:
+  # token custom ID
+  header: Authorization
+  # token key
+  secret: abcdefghijklmnopqrstuvwxyz
+  # Token validity period (default 30 minutes)
+  expireTime: 30
+
+# MyBatis configuration
+#mybatis:
+# # Search for the specified package alias
+#    typeAliasesPackage: com.ruoyi.**.domain
+#    # Configure mapper scan to find all mapper.xml mapping files
+#    mapperLocations: classpath*:mapper/**/*Mapper.xml
+#    # Load global configuration file
+#    configLocation: classpath:mybatis/mybatis-config.xml
+
+mybatis-plus:
+  type-aliases-package: com.game.**.domain
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  config-location: classpath:mybatis/mybatis-config.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# PageHelper paging plugin
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql
+
+# Swagger configuration
+swagger:
+  # Whether to enable swagger
+  enabled: true
+  # request prefix
+  pathMapping: /dev-api
+
+# Prevent XSS attacks
+xss:
+  # filter switch
+  enabled: true
+  # Exclude links (multiple separated by commas)
+  excludes: /system/notice
+  # match link
+  urlPatterns: /system/*,/monitor/*,/tool/*
+
+## file storage path
+file:
+  path: E:\eshopImage\file\
+  avatar: E:\eshopImage\file\
+  # file size /M
+  maxSize: 100
+  avatarMaxSize: 5

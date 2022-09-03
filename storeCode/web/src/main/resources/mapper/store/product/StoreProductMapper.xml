@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.game.store.product.mapper.StoreProductMapper">
+
+    <resultMap type="StoreProduct" id="StoreProductResult">
+        <result property="id"    column="id"    />
+        <result property="image"    column="image"    />
+        <result property="sliderImage"    column="slider_image"    />
+        <result property="storeName"    column="store_name"    />
+        <result property="storeInfo"    column="store_info"    />
+        <result property="cateId"    column="cate_id"    />
+        <result property="price"    column="price"    />
+        <result property="sort"    column="sort"    />
+        <result property="sales"    column="sales"    />
+        <result property="stock"    column="stock"    />
+        <result property="isShow"    column="is_show"    />
+        <result property="description"    column="description"    />
+        <result property="cost"    column="cost"    />
+        <result property="ficti"    column="ficti"    />
+        <result property="browse"    column="browse"    />
+    </resultMap>
+
+    <sql id="selectStoreProductVo">
+        select id, image, slider_image, store_name, store_info, cate_id, price, sort, sales, stock, is_show, description, cost, ficti, browse from store_product
+    </sql>
+
+    <select id="selectStoreProductList" parameterType="StoreProduct" resultMap="StoreProductResult">
+        <include refid="selectStoreProductVo"/>
+        <where>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="sliderImage != null  and sliderImage != ''"> and slider_image = #{sliderImage}</if>
+            <if test="storeName != null  and storeName != ''"> and store_name like concat('%', #{storeName}, '%')</if>
+            <if test="storeInfo != null  and storeInfo != ''"> and store_info = #{storeInfo}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="cateId != null "> and cate_id = #{cateId}</if>
+            <if test="sales != null  and sales != ''"> and sales = #{sales}</if>
+            <if test="stock != null  and stock != ''"> and stock = #{stock}</if>
+            <if test="isShow != null "> and is_show = #{isShow}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="cost != null "> and cost = #{cost}</if>
+            <if test="ficti != null "> and ficti = #{ficti}</if>
+            <if test="browse != null "> and browse = #{browse}</if>
+        </where>
+    </select>
+
+    <select id="selectStoreProductById" parameterType="Long" resultMap="StoreProductResult">
+        <include refid="selectStoreProductVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectCateCountData" resultType="com.game.store.product.domain.StoreCategoryCount">
+        SELECT A.id,A.cate_name as name,count(*) as value FROM `store_category` as A left join store_product as B on A.id = B.cate_id
+        GROUP BY A.id
+    </select>
+
+    <select id="selectStoreSales" resultType="com.game.store.product.domain.StoreSales">
+        SELECT B.store_name as name ,sum(A.total_num ) as value FROM `store_order` as A left join store_product as B on A.product_id = B.id
+        GROUP BY A.product_id
+    </select>
+    <select id="selectGoodStore" resultType="com.game.store.product.domain.GoodProduct">
+        SELECT B.id,B.store_name as name ,sum(A.total_num ) as value,C.cate_name as categoryName FROM `store_order` as A left join store_product as B on A.product_id = B.id LEFT JOIN store_category as C on B.cate_id = C.id
+        GROUP BY A.product_id
+        ORDER BY sum(A.total_num ) DESC LIMIT 1
+    </select>
+    <select id="getCategoryList" resultType="java.lang.String">
+        select cate_name from store_category
+    </select>
+    <select id="getDays" resultType="java.lang.String">
+        SELECT d.date
+        FROM (
+                 SELECT CURDATE() AS date
+                 UNION ALL
+                 SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date
+                 UNION ALL
+                 SELECT DATE_SUB(CURDATE(), INTERVAL 2 DAY) AS date
+                 UNION ALL
+                 SELECT DATE_SUB(CURDATE(), INTERVAL 3 DAY) AS date
+                 UNION ALL
+                 SELECT DATE_SUB(CURDATE(), INTERVAL 4 DAY) AS date
+                 UNION ALL
+                 SELECT DATE_SUB(CURDATE(), INTERVAL 5 DAY) AS date
+                 UNION ALL
+                 SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY) AS date
+                 UNION ALL
+                 SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY) AS date
+             ) d
+
+    </select>
+    <select id="getStoreCategorySales" resultType="com.game.store.product.domain.StoreCategorySales">
+        select DATE_FORMAT(A.create_time,'%Y-%m-%d') as date,B.cate_name as  cate_name,SUM(A.total_num) as num from store_order as A left join store_category as B on A.store_id = B.id
+        where DATE_FORMAT(A.create_time,'%Y-%m-%d') = #{date}
+          and cate_name = #{name}
+        GROUP BY A.store_id
+
+    </select>
+
+    <select id="selectPoorStore" resultType="com.game.store.product.domain.StoreProduct">
+        select * from  store_product where sales = 0
+    </select>
+
+
+    <!--    <select id="getStoreCategorySales" resultType="com.game.store.product.domain.StoreCategorySales">-->
+<!--        SELECT d.date, IFNULL(r.num,0) AS num,r.cate_name-->
+<!--        FROM (-->
+<!--                 SELECT CURDATE() AS date-->
+<!--                 UNION ALL-->
+<!--                 SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date-->
+<!--                 UNION ALL-->
+<!--                 SELECT DATE_SUB(CURDATE(), INTERVAL 2 DAY) AS date-->
+<!--                 UNION ALL-->
+<!--                 SELECT DATE_SUB(CURDATE(), INTERVAL 3 DAY) AS date-->
+<!--                 UNION ALL-->
+<!--                 SELECT DATE_SUB(CURDATE(), INTERVAL 4 DAY) AS date-->
+<!--                 UNION ALL-->
+<!--                 SELECT DATE_SUB(CURDATE(), INTERVAL 5 DAY) AS date-->
+<!--                 UNION ALL-->
+<!--                 SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY) AS date-->
+<!--                 UNION ALL-->
+<!--                 SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY) AS date-->
+<!--             ) d-->
+<!--                 LEFT JOIN (-->
+<!--            SELECT DATE_FORMAT(create_time,'%Y-%m-%d') AS createTime, SUM(total_num) AS num,C.cate_name-->
+<!--            FROM store_order AS A LEFT JOIN store_category AS C ON A.store_id = C.id-->
+<!--            GROUP BY store_id-->
+<!--        ) r ON r.createTime = d.date-->
+<!--        where r.cate_name = #{name}-->
+<!--        GROUP BY d.date-->
+
+<!--    </select>-->
+
+    <insert id="insertStoreProduct" parameterType="StoreProduct" useGeneratedKeys="true" keyProperty="id">
+        insert into store_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="image != null and image != ''">image,</if>
+            <if test="sliderImage != null and sliderImage != ''">slider_image,</if>
+            <if test="storeName != null and storeName != ''">store_name,</if>
+            <if test="storeInfo != null and storeInfo != ''">store_info,</if>
+            <if test="cateId != null and cateId != ''">cate_id,</if>
+            <if test="price != null">price,</if>
+            <if test="sort != null">sort,</if>
+            <if test="sales != null">sales,</if>
+            <if test="stock != null">stock,</if>
+            <if test="isShow != null">is_show,</if>
+            <if test="description != null">description,</if>
+            <if test="cost != null">cost,</if>
+            <if test="ficti != null">ficti,</if>
+            <if test="browse != null">browse,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="image != null and image != ''">#{image},</if>
+            <if test="sliderImage != null and sliderImage != ''">#{sliderImage},</if>
+            <if test="storeName != null and storeName != ''">#{storeName},</if>
+            <if test="storeInfo != null and storeInfo != ''">#{storeInfo},</if>
+            <if test="cateId != null and cateId != ''">#{cateId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="sales != null">#{sales},</if>
+            <if test="stock != null">#{stock},</if>
+            <if test="isShow != null">#{isShow},</if>
+            <if test="description != null">#{description},</if>
+            <if test="cost != null">#{cost},</if>
+            <if test="ficti != null">#{ficti},</if>
+            <if test="browse != null">#{browse},</if>
+        </trim>
+    </insert>
+
+    <update id="updateStoreProduct" parameterType="StoreProduct">
+        update store_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="sliderImage != null and sliderImage != ''">slider_image = #{sliderImage},</if>
+            <if test="storeName != null and storeName != ''">store_name = #{storeName},</if>
+            <if test="storeInfo != null and storeInfo != ''">store_info = #{storeInfo},</if>
+            <if test="cateId != null and cateId != ''">cate_id = #{cateId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="sales != null">sales = #{sales},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="isShow != null">is_show = #{isShow},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="cost != null">cost = #{cost},</if>
+            <if test="ficti != null">ficti = #{ficti},</if>
+            <if test="browse != null">browse = #{browse},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStoreProductById" parameterType="Long">
+        delete from store_product where id = #{id}
+    </delete>
+
+    <delete id="deleteStoreProductByIds" parameterType="String">
+        delete from store_product where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

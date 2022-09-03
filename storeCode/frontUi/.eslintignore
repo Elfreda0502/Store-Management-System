@@ -1,0 +1,10 @@
+# 忽略buildCatalogue下类型为js的文件的语法检查
+build/*.js
+# 忽略src/assetsCatalogue下文件的语法检查
+src/assets
+# 忽略publicCatalogue下文件的语法检查
+public
+# 忽略当前Catalogue下为js的文件的语法检查
+*.js
+# 忽略当前Catalogue下为vue的文件的语法检查
+*.vue

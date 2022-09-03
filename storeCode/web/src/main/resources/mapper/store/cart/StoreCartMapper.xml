@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.game.store.cart.mapper.StoreCartMapper">
+    
+    <resultMap type="StoreCart" id="StoreCartResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="productId"    column="product_id"    />
+        <result property="cartNum"    column="cart_num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isPay"    column="is_pay"    />
+    </resultMap>
+
+    <sql id="selectStoreCartVo">
+        select id, uid, product_id, cart_num, create_time, update_time, is_pay from store_cart
+    </sql>
+
+    <select id="selectStoreCartList" parameterType="StoreCart" resultMap="StoreCartResult">
+        <include refid="selectStoreCartVo"/>
+        <where>  
+            <if test="uid != null  and uid != ''"> and uid = #{uid}</if>
+            <if test="productId != null  and productId != ''"> and product_id = #{productId}</if>
+            <if test="cartNum != null  and cartNum != ''"> and cart_num = #{cartNum}</if>
+            <if test="isPay != null "> and is_pay = #{isPay}</if>
+        </where>
+    </select>
+    
+    <select id="selectStoreCartById" parameterType="Long" resultMap="StoreCartResult">
+        <include refid="selectStoreCartVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStoreCart" parameterType="StoreCart" useGeneratedKeys="true" keyProperty="id">
+        insert into store_cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null and uid != ''">uid,</if>
+            <if test="productId != null and productId != ''">product_id,</if>
+            <if test="cartNum != null and cartNum != ''">cart_num,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isPay != null">is_pay,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null and uid != ''">#{uid},</if>
+            <if test="productId != null and productId != ''">#{productId},</if>
+            <if test="cartNum != null and cartNum != ''">#{cartNum},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isPay != null">#{isPay},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStoreCart" parameterType="StoreCart">
+        update store_cart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null and uid != ''">uid = #{uid},</if>
+            <if test="productId != null and productId != ''">product_id = #{productId},</if>
+            <if test="cartNum != null and cartNum != ''">cart_num = #{cartNum},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isPay != null">is_pay = #{isPay},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStoreCartById" parameterType="Long">
+        delete from store_cart where id = #{id}
+    </delete>
+
+    <delete id="deleteStoreCartByIds" parameterType="String">
+        delete from store_cart where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
